@@ -15,7 +15,19 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 
-var driver = neo4j.driver('neo4j://localhost:7687', neo4j.auth.basic('neo4j','joel@123'));
+//local connection
+//var driver = neo4j.driver('neo4j://localhost:7687', neo4j.auth.basic('neo4j','joel@123'));
+
+//online connection
+var driver = neo4j.driver('neo4j+s://e20c507b.databases.neo4j.io', neo4j.auth.basic('neo4j','xVYlHm02bYOTUl8uX9x13mbFuyupOH4mQzqlc7R7FFY'));
+
+//online connection
+// # Wait 60 seconds before connecting using these details, or login to https://console.neo4j.io to validate the Aura Instance is available
+// NEO4J_URI=neo4j+s://e20c507b.databases.neo4j.io
+// NEO4J_USERNAME=neo4j
+// NEO4J_PASSWORD=xVYlHm02bYOTUl8uX9x13mbFuyupOH4mQzqlc7R7FFY
+// AURA_INSTANCEID=e20c507b
+// AURA_INSTANCENAME=Instance01
 
 var session = driver.session();
 
@@ -32,6 +44,36 @@ var storage =  multer.diskStorage({
 });
 
 var upload = multer({storage: storage});
+
+
+var multerEvents = require('multer');
+
+var storageEvent =  multerEvents.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './public/assets/images/events/')
+    },
+    filename: (req, file, cb) =>{
+        console.log(file);
+        cb(null, Date.now() + path.extname(file.originalname))
+    }
+});
+
+var uploadEvent = multerEvents({storage: storageEvent});
+
+
+var multerNews = require('multer');
+
+var storageNews =  multerNews.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './public/assets/images/news/')
+    },
+    filename: (req, file, cb) =>{
+        console.log(file);
+        cb(null, Date.now() + path.extname(file.originalname))
+    }
+});
+
+var uploadNews = multerNews({storage: storageNews});
 
 
 app.get('/admin', function(req, res){
@@ -77,11 +119,108 @@ app.get('/admin', function(req, res){
                    });
                 });
 
-                res.render('admin',{
-                    courses: courseArr,
-                    users: userArr,
-                    users2: userArr2,
-                 });
+
+
+
+
+                session
+                .run('MATCH(n:Events) return n ORDER BY keys(n) DESC')
+                .then(function(result){
+                  var eventsArr = [];
+                  result.records.forEach(function(record) {
+                    eventsArr.push({
+                         id: record._fields[0].identity.low,
+                         eventTitle:  record._fields[0].properties.eventTitle,
+                         dte:  record._fields[0].properties.dte,
+                         sched:  record._fields[0].properties.sched,
+                         descp:  record._fields[0].properties.descp,
+                         eventImg:  record._fields[0].properties.eventImg
+                     });
+                  });
+
+
+
+
+                  session
+                  .run('MATCH(n:News) return n ORDER BY keys(n) DESC LIMIT 25')
+                  .then(function(result){
+                    var newsArr = [];
+                    result.records.forEach(function(record) {
+                        newsArr.push({
+                           id: record._fields[0].identity.low,
+                           newsTitle:  record._fields[0].properties.newsTitle,
+                           dte:  record._fields[0].properties.dte,
+                           descp:  record._fields[0].properties.descp,
+                           newsImg:  record._fields[0].properties.newsImg
+                       });
+                    });
+
+
+
+
+
+    
+    
+                    // res.render('admin',{
+                    //     courses: courseArr,
+                    //     users: userArr,
+                    //     users2: userArr2,
+                    //     events: eventsArr,
+                    //     news: newsArr
+                    //  });
+
+
+                     //add job post start
+                     
+                  session
+                  .run('MATCH (n:JobPosts) return n')
+                  .then(function(result){
+                    var jobPostArray = [];
+                    result.records.forEach(function(record) {
+                        jobPostArray.push({
+                           id: record._fields[0].identity.low,
+                           cat:  record._fields[0].properties.cat,
+                           company:  record._fields[0].properties.company,
+                           jobtitle:  record._fields[0].properties.jobtitle,
+                           postedby:  record._fields[0].properties.postedby,
+                           jpdte:  record._fields[0].properties.jpdtey,
+                           location: record._fields[0].properties.location,
+                           description: record._fields[0].properties.description,
+                           jtyp: record._fields[0].properties.jtyp,
+                           idx: record._fields[0].properties.idx
+                       });
+                    });
+
+
+    
+                    res.render('admin',{
+                        jobPostArray: jobPostArray,
+                        courses: courseArr,
+                        users: userArr,
+                        users2: userArr2,
+                        events: eventsArr,
+                        news: newsArr
+                     });
+
+                     
+    
+
+                  })
+                  .catch(function(err){
+                       console.log(err);
+                  });
+                     //add job post end
+
+                  })
+                  .catch(function(err){
+                       console.log(err);
+                  });
+
+  
+                })
+                .catch(function(err){
+                     console.log(err);
+                });
 
               })
               .catch(function(err){
@@ -89,6 +228,7 @@ app.get('/admin', function(req, res){
               });
 
           })
+
 
           .catch(function(err){
             console.log(err);
@@ -101,6 +241,9 @@ app.get('/admin', function(req, res){
     });
 
 });
+
+
+
 
 
 
@@ -124,6 +267,58 @@ app.post('/addUser', upload.single('img_path') ,function(req, res){
           console.log(err);
        });
 });
+
+//addEvents
+app.post('/addEvents', uploadEvent.single('eventImg') ,function(req, res){
+    var eventTitle = req.body.eventTitle
+    var sched = req.body.sched
+    var descp = req.body.descp
+    var  eventImg = req.file.filename// req.body.img_path
+
+    let ts = Date.now();
+    let date_time = new Date(ts);
+    let date = date_time.getDate();
+    let month = date_time.getMonth() + 1;
+    let year = date_time.getFullYear();
+
+    var dte = 'Posted by: Admin | ' + month + "-" + date + "-" + year
+
+
+    session
+       .run('create(n:Events {eventTitle: $eventTitle, sched: $sched, descp: $descp, eventImg: $eventImg, dte: $dte}) return n.eventTitle', {eventTitle: eventTitle, sched: sched, descp: descp, eventImg: eventImg, dte: dte})
+       .then(function(result){
+            res.redirect('/admin');
+       })
+       .catch(function(err){
+          console.log(err);
+       });
+});
+
+//addNews addNews
+app.post('/addNews', uploadNews.single('newsImg') ,function(req, res){
+    var newsTitle = req.body.newsTitle
+    var descp = req.body.descp
+    var  newsImg = req.file.filename// req.body.img_path
+
+    let ts = Date.now();
+    let date_time = new Date(ts);
+    let date = date_time.getDate();
+    let month = date_time.getMonth() + 1;
+    let year = date_time.getFullYear();
+
+    var dte = 'Posted by: Admin | ' + month + "-" + date + "-" + year
+
+
+    session
+       .run('create(n:News {newsTitle: $newsTitle,  descp: $descp, newsImg: $newsImg, dte: $dte}) return n.eventTitle', {newsTitle: newsTitle,  descp: descp, newsImg: newsImg, dte: dte})
+       .then(function(result){
+            res.redirect('/admin');
+       })
+       .catch(function(err){
+          console.log(err);
+       });
+});
+
 
 
 app.post('/editCourse',function(req, res){
@@ -153,6 +348,49 @@ app.post('/deleteCourse',function(req, res){
        });
 });
 
+//deleteEvent
+app.post('/deleteEvent',function(req, res){
+    var title = req.body.title
+    session
+       .run('MATCH (n:Events {eventTitle: $eventTitle}) DETACH DELETE n', {eventTitle: title})
+       .then(function(result){
+            res.redirect('/admin');
+       })
+       .catch(function(err){
+          console.log(err);
+       });
+});
+
+
+//deleteNews
+app.post('/deleteNews',function(req, res){
+    var title = req.body.title
+    session
+       .run('MATCH (n:News {newsTitle: $newsTitle}) DETACH DELETE n', {newsTitle: title})
+       .then(function(result){
+            res.redirect('/admin');
+       })
+       .catch(function(err){
+          console.log(err);
+       });
+});
+
+//deleteJobPost
+app.post('/deleteJobPost',function(req, res){
+    var idx = req.body.idx;
+    console.log('id kuno ::' + idx);
+    session
+       .run(`MATCH (n:JobPosts) where n.idx = '${idx}' DELETE n`)
+       .then(function(result){
+            res.redirect('/admin');
+       })
+       .catch(function(err){
+          console.log(err);
+       });
+});
+
+
+
 
 app.post('/deleteUser',function(req, res){
     var fn = req.body.fn
@@ -180,6 +418,37 @@ app.post('/deleteAlumna',function(req, res){
 
 
 
+app.post('/addJobPosts',function(req, res){
+    var cat = req.body.cat
+    var company = req.body.company
+    var jobtitle = req.body.jobtitle
+    var postedby = req.body.postedby
+   
+
+    let ts = Date.now();
+    let date_time = new Date(ts);
+    let date = date_time.getDate();
+    let month = date_time.getMonth() + 1;
+    let year = date_time.getFullYear();
+  
+
+    var jpdte = 'Posted by: Admin | ' + month + "-" + date + "-" + year
+    var location = req.body.location
+    var description = req.body.description
+    var jtyp= req.body.jtyp
+
+    var idx = jobtitle;
+
+    session
+       .run(`create (j:JobPosts {cat: '${cat}', company: '${company}', jobtitle: '${jobtitle}', postedby: '${postedby}', jpdte: '${jpdte}', location: '${location}', description: '${description}', jtyp: '${jtyp}', idx: '${idx}'}) return j`)
+       .then(function(result){
+            res.redirect('/admin');
+       })
+       .catch(function(err){
+          console.log(err);
+       });
+});
+
 
 
 app.post('/add',function(req, res){
@@ -200,21 +469,43 @@ app.get('/orders/', function(req, res){
 
 app.get('/', function(req, res){
     session
-       .run('MATCH(n:Course) return n LIMIT 25')
+       .run('MATCH(n:Events) return n ORDER BY id(n) DESC  limit 1')
        .then(function(result){
-        var courseArr = [];
+        var eventsArr = [];
            result.records.forEach(function(record) {
-
-            console.log(record._fields[0].properties.cname);
-
-            courseArr.push({
+            eventsArr .push({
                   id: record._fields[0].identity.low,
-                  name:  record._fields[0].properties.cname
+                  dte:  record._fields[0].properties.dte,
+                  eventTitle:  record._fields[0].properties.eventTitle,
+                  descp:  record._fields[0].properties.descp,
+                  eventImg:  record._fields[0].properties.eventImg
+              });
+           });
+
+
+           session
+       .run('MATCH(n:News) return n ORDER BY elementId(n) DESC  limit 4')
+       .then(function(result){
+        var newsArr = [];
+           result.records.forEach(function(record) {
+            newsArr .push({
+                  id: record._fields[0].identity.low,
+                  dte:  record._fields[0].properties.dte,
+                  newsTitle:  record._fields[0].properties.newsTitle,
+                  descp:  record._fields[0].properties.descp,
+                  newsImg:  record._fields[0].properties.newsImg
               });
            });
            res.render('index',{
-              courses: courseArr
+              events: eventsArr,
+              news: newsArr
            });
+       })
+       .catch(function(err){
+        console.log(err);
+       });
+     
+
        })
        .catch(function(err){
         console.log(err);
@@ -226,7 +517,42 @@ app.get('/my_network', function(req, res){
 });
 
 app.get('/job_opportunities', function(req, res){
-    res.render('job_opportunities',{})
+
+     //add job post start
+                     
+     session
+     .run('MATCH (n:JobPosts) return n')
+     .then(function(result){
+       var jobPostArray = [];
+       result.records.forEach(function(record) {
+           jobPostArray.push({
+              id: record._fields[0].identity.low,
+              cat:  record._fields[0].properties.cat,
+              company:  record._fields[0].properties.company,
+              jobtitle:  record._fields[0].properties.jobtitle,
+              postedby:  record._fields[0].properties.postedby,
+              jpdte:  record._fields[0].properties.jpdtey,
+              location: record._fields[0].properties.location,
+              description: record._fields[0].properties.description,
+              jtyp: record._fields[0].properties.jtyp,
+              idx: record._fields[0].properties.idx
+          });
+       });
+
+
+       res.render('job_opportunities',{
+           jobPostArray: jobPostArray
+        });
+
+        
+
+
+     })
+     .catch(function(err){
+          console.log(err);
+     });
+        //add job post end
+
 });
 
 app.get('/forums', function(req, res){
@@ -234,8 +560,72 @@ app.get('/forums', function(req, res){
 });
 
 
+app.get('/events', function(req, res){
+   
+    session
+    .run('MATCH(n:Events) return n LIMIT 25')
+    .then(function(result){
+      var eventsArr = [];
+      result.records.forEach(function(record) {
+        eventsArr.push({
+             id: record._fields[0].identity.low,
+             eventTitle:  record._fields[0].properties.eventTitle,
+             dte:  record._fields[0].properties.dte,
+             sched:  record._fields[0].properties.sched,
+             descp:  record._fields[0].properties.descp,
+             eventImg:  record._fields[0].properties.eventImg
+         });
+      });
+
+
+      res.render('events',{
+          events: eventsArr,
+       });
+
+    })
+    .catch(function(err){
+         console.log(err);
+    });
+
+});
+
+
 app.get('/about', function(req, res){
     res.render('about',{})
+
+});
+
+app.get('/contact', function(req, res){
+   res.render('contact',{})
+
+});
+
+app.get('/news', function(req, res){
+    
+    session
+    .run('MATCH(n:News) return n LIMIT 25')
+    .then(function(result){
+      var newsArr = [];
+      result.records.forEach(function(record) {
+        newsArr.push({
+             id: record._fields[0].identity.low,
+             newsTitle:  record._fields[0].properties.newsTitle,
+             dte:  record._fields[0].properties.dte,
+             descp:  record._fields[0].properties.descp,
+             newsImg:  record._fields[0].properties.newsImg
+         });
+      });
+
+
+      res.render('news',{
+          news: newsArr,
+       });
+
+    })
+    .catch(function(err){
+         console.log(err);
+    });
+
 });
 
 
@@ -244,3 +634,18 @@ app.listen(4100);
 console.log('Server started on port 4100');
 
 module.exports = app;
+
+
+
+//online connection
+// # Wait 60 seconds before connecting using these details, or login to https://console.neo4j.io to validate the Aura Instance is available
+// NEO4J_URI=neo4j+s://e20c507b.databases.neo4j.io
+// NEO4J_USERNAME=neo4j
+// NEO4J_PASSWORD=xVYlHm02bYOTUl8uX9x13mbFuyupOH4mQzqlc7R7FFY
+// AURA_INSTANCEID=e20c507b
+// AURA_INSTANCENAME=Instance01
+
+
+//https://console.neo4j.io/?product=aura-db#databases
+//email: mitc02sys@gmail.com
+//password: pass@123
