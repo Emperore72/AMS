@@ -35,6 +35,9 @@
         <script src="/assets/js/jobs/editJobModal.js"></script>
         <script src="/assets/js/jobs/deleteJobModal.js"></script>
         <script src="/assets/js/jobs/addJobModal.js"></script>
+        <!-- News -->
+        <script src="/assets/js/news/addNews.js"></script>
+        <script src="/assets/js/news/deleteNews.js"></script>
         <!-- Events -->
         <script src="/assets/js/events/addEventsModal.js"></script>
         <script src="/assets/js/events/viewEventModal.js"></script>
@@ -107,6 +110,12 @@
                     <i class="fa-solid fa-users"></i>
                     Alumni List
                 </a>
+                
+                <a class="sidebarLink nav-link" id="v-pills-news-tab" data-bs-toggle="pill" href="#v-pills-news" role="tab" aria-controls="v-pills-forum" aria-selected="false"> 
+                    <i class="fa-solid fa-newspaper"></i> 
+                    News
+                </a>
+
                 <a class="sidebarLink nav-link" id="v-pills-jobs-tab" data-bs-toggle="pill" href="#v-pills-jobs" role="tab" aria-controls="v-pills-jobs" aria-selected="false">
                     <i class="fa-solid fa-briefcase"></i>
                     Jobs
@@ -115,6 +124,8 @@
                     <i class="fa-solid fa-calendar-days"></i>
                     Events
                 </a>
+
+
                 <a class="sidebarLink nav-link" id="v-pills-forum-tab" data-bs-toggle="pill" href="#v-pills-forum" role="tab" aria-controls="v-pills-forum" aria-selected="false"> 
                     <i class="fa-solid fa-comments"></i> 
                     Forum
@@ -533,27 +544,32 @@
                                         <th scope="col">Company</th>
                                         <th scope="col">Job Title</th>
                                         <th scope="col">Posted By</th>
+                                  
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+
+                                    <% jobPostArray.forEach(function(jb){ %>
+
                                     <tr class="align-middle">
                                         <th scope="row">1</th>
+
                                         <td>
-                                            <p class="mb-0" id="jobCompanyName">Software Inc,</p>
+                                            <p class="mb-0" id="jobCompanyName"><%= jb.company %></p>
                                         </td>
                                         <td class="text-center">
-                                            <p class="mb-0" id="jobTitle">Web Developer</p>
+                                            <p class="mb-0" id="jobTitle"><%= jb.jobtitle %></p>
                                         </td>
                                         <td class="text-center">
-                                            <p class="mb-0">Juan Dela Cruz</p>
+                                            <p class="mb-0"><%= jb.postedby %></p>
+                                        </td>
+                                        <td class="text-center" style="display: none;">
+                                            <p class="mb-0" id="idx"><%= jb.idx %></p>
                                         </td>
                                         <td class="text-center text-nowrap" style="width: 1%;">
                                             <div>
-                                                <button class="editButton btn text-nowrap bg-primary" id="jobViewButton" type="button">
-                                                    <i class="fa-solid fa-eye"></i>
-                                                    View
-                                                </button>
+                                                
                                                 <button class="editButton btn text-nowrap" id="jobEditButton" type="button">
                                                     <i class="fa-solid fa-edit"></i>
                                                     Edit
@@ -562,41 +578,16 @@
                                                     <i class="fa-solid fa-trash"></i>
                                                     Delete
                                                 </button>
+
                                             </div>
                                         </td>
                                         <input type="hidden" id="jobLocation" value="Masbate City">
                                         <input type="hidden" id="jobDescription" value="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Explicabo, voluptates tempora! Repellendus tempore tenetur, consequatur modi ut corrupti, ducimus quis nemo debitis similique omnis numquam earum harum distinctio cum nulla.">
                                     </tr>
-                                    <tr class="align-middle">
-                                        <th scope="row">2</th>
-                                        <td>
-                                            <p class="mb-0" id="jobCompanyName">IT Industry</p>
-                                        </td>
-                                        <td class="text-center">
-                                            <p class="mb-0" id="jobTitle">Back-End Developer</p>
-                                        </td>
-                                        <td class="text-center">
-                                            <p class="mb-0">Tito Badang</p>
-                                        </td>
-                                        <td class="text-center text-nowrap" style="width: 1%;">
-                                            <div>
-                                                <button class="editButton btn text-nowrap bg-primary" id="jobViewButton" type="button">
-                                                    <i class="fa-solid fa-eye"></i>
-                                                    View
-                                                </button>
-                                                <button class="editButton btn text-nowrap" id="jobEditButton" type="button">
-                                                    <i class="fa-solid fa-edit"></i>
-                                                    Edit
-                                                </button>
-                                                <button class="deleteButton btn text-nowrap" id="jobDeleteButton" type="button">
-                                                    <i class="fa-solid fa-trash"></i>
-                                                    Delete
-                                                </button>
-                                            </div>
-                                        </td>
-                                        <input type="hidden" id="jobLocation" value="Las Pinas">
-                                        <input type="hidden" id="jobDescription" value="The quick brown fox jumps over the lazy dog near in the river bank.">
-                                    </tr>
+
+                                    <% }) %>
+
+                                   
                                 </tbody>
                             </table>
                         </div>
@@ -620,6 +611,9 @@
                         </div>
                     </div>
                 </div>
+
+
+
 
                 <!-- Events -->
                 <div class="tab-pane fade p-4" id="v-pills-events" role="tabpanel" aria-labelledby="v-pills-events-tab">
@@ -665,16 +659,28 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+
+
+                                    <% var c = 0 %>
+                                    <% events.forEach(function(ev) { c = c + 1  %> 
+
+
+
+                                        
                                     <tr class="align-middle">
-                                        <th scope="row">1</th>
+
+                                    
+
+
+                                        <th scope="row"><%= c %></th>
                                         <td>
-                                            <p class="mb-0" id="eventSchedule">April 11, 2023 07:34 PM</p>
+                                            <p class="mb-0" id="eventSchedule"><%= ev.sched %></p>
                                         </td>
                                         <td class="text-center">
-                                            <p class="mb-0" id="eventTitle">Event Name Here</p>
+                                            <p class="mb-0" id="eventTitle"><%= ev.eventTitle %></p>
                                         </td>
                                         <td class="text-start">
-                                            <p class="mb-0 small" id="eventDescription">Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda, non nobis hic voluptates fugiat nesciunt quaerat itaque perferendis consequatur eaque error qui similique pariatur eveniet rem illum? Earum, temporibus ullam.</p>
+                                            <p class="mb-0 small" id="eventDescription"><%= ev.descp %></p>
                                         </td>
                                         <td class="text-center">
                                             <p class="mb-0" id="eventParticipants">1</p>
@@ -696,6 +702,11 @@
                                             </div>
                                         </td>
                                     </tr>
+
+
+                                    <% }) %>
+
+
                                 </tbody>
                             </table>
                         </div>
@@ -719,6 +730,120 @@
                         </div>
                     </div>
                 </div>
+
+
+
+                <!-- News -->
+                <div class="tab-pane fade p-4" id="v-pills-news" role="tabpanel" aria-labelledby="v-pills-news-tab">
+                    <div class="card">
+                        <div class="card-header d-flex align-items-center justify-content-between">
+                            List of News
+                            <button class="addNewsButton btn py-0">
+                                <i class="fa-solid fa-plus"></i>
+                                New Entry
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between gap-5 align-items-center mb-3">
+                                <div class="filterEntrySection">
+                                    <label for="entryNumbers">
+                                    Show
+                                    <select id="entryNumbers">
+                                        <option>5</option>
+                                        <option>10</option>
+                                        <option>15</option>
+                                        <option>20</option>
+                                        <option>25</option>
+                                    </select>
+                                    entries
+                                    </label>
+                                </div>
+                                <div class="searchEntrySection input-group">
+                                    <input type="search" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="input-group-right">
+                                    <span class="input-group-text" id="input-group-right-example">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <table class="table table-bordered text-center table-hover table-responsive">
+                                <thead>
+                                    <tr class="align-middle">
+                                        <th scope="col">#</th>
+                                        <th scope="col">Title</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+
+                                    <% var c = 0 %>
+                                    <% news.forEach(function(nw) { c = c + 1  %> 
+
+
+
+                                        
+                                    <tr class="align-middle">
+
+                                        <th scope="row"><%= c %></th>
+                                        <td>
+                                            <p class="mb-0" id="newsTitle"><%= nw.newsTitle %></p>
+                                        </td>
+                                        <td class="text-center">
+                                            <p class="mb-0" id="newsDescription"><%= nw.descp %></p>
+                                        </td>
+                                       
+                                    
+                                        <td class="text-center text-nowrap px-4" style="width: 1%;">
+                                            <div class="d-flex flex-column gap-2">
+                                                <button class="editButton btn text-nowrap bg-primary" id="eventViewButton" type="button">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                    View
+                                                </button>
+                                                <button class="editButton btn text-nowrap" id="eventEditButton" type="button">
+                                                    <i class="fa-solid fa-edit"></i>
+                                                    Edit
+                                                </button>
+                                                <button class="deleteButton btn text-nowrap" id="newsDeleteButton" type="button">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+
+                                    <% }) %>
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    Showing 1 to 2 of 2 entries
+                                </div>
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination mt-3">
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Prev</a>
+                                        </li>
+                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#">Next</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
                 
                 <!-- Forum -->
                 <div class="tab-pane fade p-4" id="v-pills-forum" role="tabpanel" aria-labelledby="v-pills-forum-tab">
