@@ -79,10 +79,10 @@
                             <a class="nav-link px-3" href="/forums">Forums</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3" href="#">News</a>
+                            <a class="nav-link px-3" href="/news">News</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3" href="#">Events</a>
+                            <a class="nav-link px-3" href="/events">Events</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link px-3" href="/about">About Us</a>
@@ -91,7 +91,7 @@
                             <a class="nav-link px-3" href="#">Schools</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3" href="#">Contact</a>
+                            <a class="nav-link px-3" href="contact">Contact</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="../AlumniManagementSystem/profile_page.php" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -160,69 +160,27 @@
 
                 <!-- News Section -->
                 <div class="d-flex gap-5 p-4 pt-5">
+                   
+                    <% news.forEach(function(nw) { %> 
                     <div class="news pb-4">
-                        <img class="newsThumbnail img-thumbnail mb-3" src="https://oc.edu.ph/09x)img_u/norlejr_08-13-2020_02:15:19%20PMBB10c2zu.jpg" alt="News Thumbnail">
+                        <img class="newsThumbnail img-thumbnail mb-3" src="./assets/images/news/<%= nw.newsImg %>"  alt="News Thumbnail">
                         <section>
                             <p>
-                                Lorem 90 ipsum dolor sit amet consectetur adipisicing elit. Accusantium nobis labore quasi, officiis quibusdam voluptatibus? Iure reiciendis maiores laudantium id vero quisquam pariatur eligendi et, eius architecto, beatae quas necessitatibus!
-                                
-                                
-                            
+                                <%= nw.descp.substr(0, 650) + '...' %>
                             </p>
-                            <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt officia natus nulla reiciendis, beatae quisquam voluptas, similique mollitia tenetur reprehenderit unde praesentium veritatis quam rerum, nisi alias? Adipisci, velit enim.
-                            </p>
+                           
                         </section>
                         <button class="readMoreButton btn px-4 float-end" type="button">
                             <i class="fa-solid fa-chevron-right"></i>
                             CLICK HERE FOR MORE
                         </button>
                     </div>
-                    <div class="news">
-                        <img class="newsThumbnail img-thumbnail mb-3" src="https://oc.edu.ph/09x)img_u/norlejr_08-13-2020_02:15:19%20PMBB10c2zu.jpg" alt="News Thumbnail">
-                        <section>
-                            <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium nobis labore quasi, officiis quibusdam voluptatibus? Iure reiciendis maiores laudantium id vero quisquam pariatur eligendi et, eius architecto, beatae quas necessitatibus!
-                            </p>
-                            <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt officia natus nulla reiciendis, beatae quisquam voluptas, similique mollitia tenetur reprehenderit unde praesentium veritatis quam rerum, nisi alias? Adipisci, velit enim.
-                            </p>
-                        </section>
-                        <button class="readMoreButton btn px-4 float-end" type="button">
-                            <i class="fa-solid fa-chevron-right"></i>
-                            CLICK HERE FOR MORE
-                        </button>
-                    </div>
-                    <div class="news">
-                        <img class="newsThumbnail img-thumbnail mb-3" src="https://oc.edu.ph/09x)img_u/norlejr_08-13-2020_02:15:19%20PMBB10c2zu.jpg" alt="News Thumbnail">
-                        <section>
-                            <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium nobis labore quasi, officiis quibusdam voluptatibus? Iure reiciendis maiores laudantium id vero quisquam pariatur eligendi et, eius architecto, beatae quas necessitatibus!
-                            </p>
-                            <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt officia natus nulla reiciendis, beatae quisquam voluptas, similique mollitia tenetur reprehenderit unde praesentium veritatis quam rerum, nisi alias? Adipisci, velit enim.
-                            </p>
-                        </section>
-                        <button class="readMoreButton btn px-4 float-end" type="button">
-                            <i class="fa-solid fa-chevron-right"></i>
-                            CLICK HERE FOR MORE
-                        </button>
-                    </div>
-                    <div class="news">
-                        <img class="newsThumbnail img-thumbnail mb-3" src="https://oc.edu.ph/09x)img_u/norlejr_08-13-2020_02:15:19%20PMBB10c2zu.jpg" alt="News Thumbnail">
-                        <section>
-                            <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium nobis labore quasi, officiis quibusdam voluptatibus? Iure reiciendis maiores laudantium id vero quisquam pariatur eligendi et, eius architecto, beatae quas necessitatibus!
-                            </p>
-                            <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt officia natus nulla reiciendis, beatae quisquam voluptas, similique mollitia tenetur reprehenderit unde praesentium veritatis quam rerum, nisi alias? Adipisci, velit enim.
-                            </p>
-                        </section>
-                        <button class="readMoreButton btn px-4 float-end" type="button">
-                            <i class="fa-solid fa-chevron-right"></i>
-                            CLICK HERE FOR MORE
-                        </button>
-                    </div>
+                   <% }) %>
+
+
+
+                   
+                  
                 </div>
             </div>
         </div>
@@ -237,18 +195,27 @@
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
                     <div class="d-flex gap-5">
-                        <div>
-                            <h6>Osmeña Colleges is the official partner of OBRA Masbateño 2022 for Culinary Arts!</h6>
-                            <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda, error eligendi impedit omnis tempore recusandae sapiente perferendis nulla accusamus, mollitia unde. Maxime nobis laborum rem dolor cupiditate quo non similique.
-                            </p>
-                            <p>
-                                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Numquam id obcaecati earum consequatur omnis eveniet officia ad rerum fugiat iure maxime est similique illum quidem soluta, sequi nesciunt ea ducimus.
-                            </p>
+                      
+                            
+
+                            <% events.forEach(function(ev) { %> 
+                                <div>
+                                <h6> <%= ev.eventTitle %></h6>
+                                <p><small style="color: #1f5030;"><%= ev.dte %></small></p>
+
+                                <p style="text-align:justify;">
+                                    <%= ev.descp %>
+                                </p>
+
+                           
+                            
                         </div>
                         <div class="">
-                            <img src="./assets/images/sample.png">
+                            <img src="./assets/images/events/<%= ev.eventImg %>"  width="300" height="400"/>
                         </div>
+
+                        <% }) %>
+
                     </div>
                 </div>
 
