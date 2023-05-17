@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>About</title>
+        <title>News</title>
         <link rel="shortcut icon" type="image/x-icon" href="./assets/images/favicon.ico">
         <link rel="stylesheet" href="./assets/css/normalize.css">
         <link rel="stylesheet" href="./assets/css/bootstrap/bootstrap.min.css">
@@ -14,10 +14,11 @@
         <link rel="stylesheet" href="./assets/css/navbar.css">
         <link rel="stylesheet" href="./assets/css/semiFooter.css">
         <link rel="stylesheet" href="./assets/css/footer.css">
-        <link rel="stylesheet" href="./assets/css/about.css">
+        <link rel="stylesheet" href="./assets/css/news.css">
         <script src="./assets/js/bootstrap/bootstrap.min.js"></script>
         <script src="./assets/js/jquery/jquery-3.6.4.min.js"></script>
         <script src="./assets/js/navbar.js"></script>
+        <script src="./assets/js/news/readMoreButton.js"></script>
     </head>
     <body>
         <!-- Header -->
@@ -89,7 +90,7 @@
                             <a class="nav-link px-3" href="#">Schools</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-3" href="contact">Contact</a>
+                            <a class="nav-link px-3" href="#">Contact</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="../AlumniManagementSystem/profile_page.php" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -106,21 +107,39 @@
             </div>
         </nav>
 
+        <!-- Main Content -->
         <div class="container-fluid px-0">
-            <div class="container-fluid px-0 position-relative">
-                <h1 class="aboutUsTitle px-5 py-4 rounded">About Us</h1>
-                <img class="aboutUsBanner" src="./assets/images/landing_page_bg.jpg" alt="About Us Banner">
-            </div>
-            <div class="container p-5 rounded">
-                <p>
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nam recusandae autem distinctio adipisci sapiente repudiandae eveniet dolorum unde? Deserunt dicta totam impedit incidunt. Dignissimos neque nemo magni earum ducimus odio!
-                </p>
-                <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem qui nihil rerum quae. Ipsa, adipisci? Aliquam quo voluptatem repellat pariatur, in fugit suscipit facere reiciendis aperiam aut nostrum consectetur itaque.
-                </p>
-                <p>
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellendus assumenda iusto porro veritatis, laboriosam quae illum voluptate, nam et id placeat perspiciatis fugiat dolorem quo optio perferendis necessitatibus enim alias.
-                </p>
+            <div class="container">
+                <h5 class="mb-3">News and Updates</h5>
+                
+                
+                <% news.forEach(function(nw) { %> 
+                   
+                
+                <div class="mainContent p-4 mb-2">
+                    <div class="newsSection d-flex gap-4">
+                        <img class="newsThumbnail" src="./assets/images/news/<%= nw.newsImg %>" width="450" height="450" alt="News Thumbnail">
+                        <div class="newsBody d-flex flex-column">
+                           
+                           
+                            <div class="newsHeader">
+                                <h5><%= nw.newsTitle %></h5>
+                                <p class="text-muted mb-0 small"><%= nw.dte %></p>
+                                <hr>
+                            </div>
+                            <div class="newsContent pb-5">
+                                <p style="text-align:justify;">
+                                    <%= nw.descp.substr(0, 2050) + '...' %>
+                                </p>
+                            </div>
+                            <button class="btn newsReadMoreButton d-block ms-auto" type="button">Read More</button>
+                        </div>
+                    </div>
+                </div>
+
+                <% }) %> 
+
+             
             </div>
         </div>
 

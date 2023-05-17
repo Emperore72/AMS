@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>About</title>
+        <title>Events</title>
         <link rel="shortcut icon" type="image/x-icon" href="./assets/images/favicon.ico">
         <link rel="stylesheet" href="./assets/css/normalize.css">
         <link rel="stylesheet" href="./assets/css/bootstrap/bootstrap.min.css">
@@ -14,10 +14,11 @@
         <link rel="stylesheet" href="./assets/css/navbar.css">
         <link rel="stylesheet" href="./assets/css/semiFooter.css">
         <link rel="stylesheet" href="./assets/css/footer.css">
-        <link rel="stylesheet" href="./assets/css/about.css">
+        <link rel="stylesheet" href="./assets/css/events.css">
         <script src="./assets/js/bootstrap/bootstrap.min.js"></script>
         <script src="./assets/js/jquery/jquery-3.6.4.min.js"></script>
         <script src="./assets/js/navbar.js"></script>
+        <script src="./assets/js/events/eventReadMoreButton.js"></script>
     </head>
     <body>
         <!-- Header -->
@@ -106,21 +107,39 @@
             </div>
         </nav>
 
+        <!-- Main Content -->
         <div class="container-fluid px-0">
-            <div class="container-fluid px-0 position-relative">
-                <h1 class="aboutUsTitle px-5 py-4 rounded">About Us</h1>
-                <img class="aboutUsBanner" src="./assets/images/landing_page_bg.jpg" alt="About Us Banner">
-            </div>
-            <div class="container p-5 rounded">
-                <p>
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nam recusandae autem distinctio adipisci sapiente repudiandae eveniet dolorum unde? Deserunt dicta totam impedit incidunt. Dignissimos neque nemo magni earum ducimus odio!
-                </p>
-                <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem qui nihil rerum quae. Ipsa, adipisci? Aliquam quo voluptatem repellat pariatur, in fugit suscipit facere reiciendis aperiam aut nostrum consectetur itaque.
-                </p>
-                <p>
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellendus assumenda iusto porro veritatis, laboriosam quae illum voluptate, nam et id placeat perspiciatis fugiat dolorem quo optio perferendis necessitatibus enim alias.
-                </p>
+            <div class="container">
+                <h5 class="mb-3">Upcoming Events</h5>
+                <div class="mainContent p-4 mb-4">
+                   
+                    <% events.forEach(function(ev) {  %> 
+                    <div class="eventsSection d-flex gap-4">
+                        <img class="eventsThumbnail" src="./assets/images/events/<%= ev.eventImg %>" width="300" height="400" alt="Events Thumbnail">
+                        <div class="eventsBody d-flex flex-column">
+
+                            <div class="eventsHeader">
+                                <h5><%= ev.eventTitle %></h5>
+                                <p class="text-muted mb-0 small"><%= ev.dte %></p>
+                                <hr>
+                            </div>
+                            <div class="eventsContent pb-5">
+                                <p style="text-align:justify;">
+                                    <%= ev.descp.substr(0, 2050) + '...' %>
+                                </p>
+                            </div>
+                            <button class="btn eventsReadMoreButton d-block ms-auto" type="button">Read More</button>
+
+                          
+
+                        </div>
+                    </div><br><br>
+                    <% }) %>
+
+
+                </div>
+
+               
             </div>
         </div>
 
